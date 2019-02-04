@@ -1,22 +1,25 @@
 terraform {
   backend "s3" {
-    bucket  = "test-ri-audit"
-    key     = "test/terraform.tfstate"
-    region  = "eu-west-1"
+    bucket  = "nomoreservers"
+    key     = "state/terraform.tfstate"
+    region  = "eu-west-2"
     encrypt = false
   }
 }
 
 provider "aws" {
-  region = "eu-west-1"
+  region = "eu-west-2"
 }
 
 data "aws_region" "current" {}
 
 module "blog" {
-  aws_region  = "${data.aws_region.current.name}"
-  environment = "dev"
-  subnet_list = ["subnet-c0dc22a6"]
+  vpc_name     = "pub"
+  vpc_cidr     = "10.0.0.0/26"
+  subnet_names = ["pub_a", "pub_b", "pub_c"]
+  subnet_cidrs = ["10.0.0.0/28", "10.0.0.16/28", "10.0.0.32/28"]
+  aws_region   = "${data.aws_region.current.name}"
+  environment  = "dev"
 
   tags = {
     owner = "mikec"

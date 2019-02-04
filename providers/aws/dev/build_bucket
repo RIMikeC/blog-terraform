@@ -1,0 +1,15 @@
+terraform {
+  backend "local" {
+    path = "./terraform.tfstate"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+data "aws_region" "current" {}
+
+module "s3" {
+  source = "../../../modules/s3"
+}

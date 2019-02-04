@@ -13,7 +13,18 @@ variable "aws_region" {
   description = "Region in which to run"
 }
 
-variable "subnet_list" {
-  type        = "list"
-  description = "Subnet IDs across which to load balance"
+variable "vpc_name" {
+  type = "string"
+}
+
+variable "vpc_cidr" {
+  type = "string"
+}
+
+variable "subnet_names" {
+  type = "list"
+}
+
+variable "subnet_cidrs" {
+  type = "list"
 }
