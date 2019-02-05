@@ -14,7 +14,7 @@ provider "aws" {
 data "aws_region" "current" {}
 
 module "blog" {
-  vpc_name     = "pub"
+  vpc_name     = "blog"
   vpc_cidr     = "10.0.0.0/26"
   subnet_names = ["pub_a", "pub_b", "pub_c"]
   subnet_cidrs = ["10.0.0.0/28", "10.0.0.16/28", "10.0.0.32/28"]
