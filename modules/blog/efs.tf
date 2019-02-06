@@ -12,6 +12,7 @@ resource "aws_security_group" "efs" {
     to_port     = 2049
     protocol    = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "NFS"
   }
 
   egress {
@@ -19,5 +20,6 @@ resource "aws_security_group" "efs" {
     to_port     = 2049
     protocol    = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "NFS"
   }
 }
