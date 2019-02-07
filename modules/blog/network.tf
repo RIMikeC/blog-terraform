@@ -36,13 +36,6 @@ data "aws_subnet_ids" "all" {
   vpc_id = "${aws_vpc.default.id}"
 }
 
-resource "aws_efs_mount_target" "alpha" {
-  count           = "${length(var.subnet_names)}"
-  file_system_id  = "${aws_efs_file_system.shared.id}"
-  subnet_id       = "${data.aws_subnet_ids.all.ids[count.index]}"
-  security_groups = ["${aws_security_group.efs.id}"]
-}
-
 resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.default.id}"
 }

@@ -28,6 +28,7 @@ data "aws_iam_policy_document" "ec2_policy_document" {
     actions = [
       "ec2:*",
       "s3:*",
+      "elasticfilesystem:*",
     ]
 
     resources = ["*"]
@@ -40,7 +41,7 @@ resource "aws_iam_policy" "ec2_policy" {
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name  = "ec2-${var.environment}"
-  path  = "/"
+  name = "ec2-${var.environment}"
+  path = "/"
   role = "${aws_iam_role.ec2_role.name}"
 }

@@ -1,15 +1,22 @@
 #!/bin/bash
 
-mkdir -p /mnt/efs
-chown ec2-user:ec2-user /mnt/efs
+# Get packages, including Git
 
-# update /etc/fstab
+yum update -y
+yum install -y git
 
-#  - echo "$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone).${file_system_id}.efs.$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | head -c-1).amazonaws.com:/ /mnt/efs nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+# Add Github to known hosts
+# ssh-keygen -t rsa -b 4096  -q -N '' -C root@ec2 -f ~/.ssh/id_rsa
+ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts
 
+# Get blog content
 
-sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-cbf01d3a.efs.eu-west-2.amazonaws.com:/ /mnt/efs
+git clone --recursive git@github.com:RIMikeC/blog.git ~ec2-user/blog
+find ~ec2-user -exec chown ec2-user:ec2-user {} \;
 
-# copy hugo locally
+# Grab a specific version of hugo
 
-# execute hugo as ec2-user?
+HUGO_VERSION=0.53
+wget -q -O /tmp/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz 
+tar -zxvf /tmp/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz -C /usr/local/bin/ hugo
+
