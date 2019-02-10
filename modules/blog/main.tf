@@ -11,7 +11,7 @@ data "aws_ami" "ami" {
 resource "aws_launch_configuration" "launch_config" {
   name_prefix          = "AWS_linux_2"
   image_id             = "${data.aws_ami.ami.id}"
-  instance_type        = "t2.micro"
+  instance_type        = "t3.micro"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_instance_profile.name}"
   key_name             = "${aws_key_pair.keys.key_name}"
   user_data            = "${file("${path.module}/startblog.sh")}"
