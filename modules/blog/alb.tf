@@ -27,6 +27,13 @@ resource "aws_security_group" "alb" {
     description = "HTTP"
   }
 
+  ingress {
+    from_port   = 1313
+    to_port     = 1313
+    protocol    = "tcp"
+    description = "HTTP"
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
