@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "ec2_policy_document" {
     actions = [
       "ec2:*",
       "s3:*",
-      "elasticfilesystem:*",
+      "dynamodb:*",
     ]
 
     resources = ["*"]

@@ -1,5 +1,5 @@
 #----------------------------------------------------------
-# This module creates a VPC and subnets
+# This module creates a VPC, subnets and routing
 # The subnets are spread over 3 AZs, as per best practice.
 #----------------------------------------------------------
 
