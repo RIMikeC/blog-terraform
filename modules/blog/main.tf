@@ -53,22 +53,6 @@ resource "aws_security_group" "blog_ec2" {
     description = "SSH"
   }
 
-  ingress {
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "NFS"
-  }
-
-  ingress {
-    from_port   = 1313
-    to_port     = 1313
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "hugo"
-  }
-
   egress {
     from_port   = 0
     to_port     = 65535
