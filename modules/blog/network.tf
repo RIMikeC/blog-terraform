@@ -19,21 +19,18 @@ resource "aws_vpc" "default" {
 data "aws_availability_zones" "current" {}
 
 ## Create subnet resources
-resource "aws_subnet" "pubs" {
+resource "aws_subnet" "subs" {
   count                           = "${length(var.subnet_names)}"
   availability_zone               = "${data.aws_availability_zones.current.names[count.index % 3]}"
   vpc_id                          = "${aws_vpc.default.id}"
   cidr_block                      = "${var.subnet_cidrs[count.index]}"
   map_public_ip_on_launch         = true
+#  map_public_ip_on_launch         = "${format("%.3s",var.subnet_names[count.index]) == "pub" ? true : false}"
   assign_ipv6_address_on_creation = false
 
   tags {
     Name = "${var.subnet_names[count.index]}"
   }
-}
-
-data "aws_subnet_ids" "all" {
-  vpc_id = "${aws_vpc.default.id}"
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -55,6 +52,6 @@ resource "aws_route_table" "r" {
 
 resource "aws_route_table_association" "a" {
   count          = "${length(var.subnet_names)}"
-  subnet_id      = "${element(aws_subnet.pubs.*.id, count.index)}"
+  subnet_id      = "${element(aws_subnet.subs.*.id, count.index)}"
   route_table_id = "${aws_route_table.r.id}"
 }

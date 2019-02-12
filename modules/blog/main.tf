@@ -12,11 +12,11 @@ resource "aws_launch_configuration" "launch_config" {
   name_prefix          = "AWS_linux_2"
   image_id             = "${data.aws_ami.ami.id}"
   instance_type        = "t3.micro"
+  spot_price           = "0.0034"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_instance_profile.name}"
   key_name             = "${aws_key_pair.keys.key_name}"
   user_data            = "${file("${path.module}/startblog.sh")}"
   enable_monitoring    = true
-  placement_tenancy    = "default"
   security_groups      = ["${aws_security_group.blog_ec2.id}"]
 
   lifecycle {
@@ -86,7 +86,7 @@ resource "aws_autoscaling_group" "asg" {
 
   health_check_type   = "EC2"
   desired_capacity    = 1
-  vpc_zone_identifier = ["${aws_subnet.pubs.*.id}"]
+  vpc_zone_identifier = ["${aws_subnet.subs.*.id}"]
 
   target_group_arns = ["${aws_lb_target_group.default.arn}"]
 

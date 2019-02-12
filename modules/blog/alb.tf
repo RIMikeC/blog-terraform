@@ -2,7 +2,7 @@ resource "aws_lb" "alb" {
   name               = "blog-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = ["${aws_subnet.pubs.*.id}"]
+  subnets            = ["${aws_subnet.subs.0.id}", "${aws_subnet.subs.1.id}", "${aws_subnet.subs.2.id}"]
   security_groups    = ["${aws_security_group.alb.id}"]
 
   enable_deletion_protection = false
@@ -15,32 +15,17 @@ resource "aws_lb" "alb" {
 resource "aws_security_group" "alb" {
   description = "Security group allowing traffic to the ALB"
   vpc_id      = "${aws_vpc.default.id}"
+  name        = "blog_alb"
+}
 
-  tags {
-    Name = "blog ALB sec"
-  }
+resource "aws_security_group_rule" "allow_web" {
+  type        = "ingress"
+  from_port   = 1313
+  to_port     = 1313
+  protocol    = "tcp"
+  cidr_blocks = ["193.105.212.250/32", "80.168.1.186/32"]
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    description = "HTTP"
-  }
-
-  ingress {
-    from_port   = 1313
-    to_port     = 1313
-    protocol    = "tcp"
-    description = "HTTP"
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow All"
-  }
+  security_group_id = "${aws_security_group.alb.id}"
 }
 
 resource "aws_lb_target_group" "default" {
@@ -51,14 +36,14 @@ resource "aws_lb_target_group" "default" {
   vpc_id               = "${aws_vpc.default.id}"
   target_type          = "instance"
 
-#  health_check {
-#    healthy_threshold   = 4
-#    unhealthy_threshold = 3
-#    timeout             = 5
-#    port                = "traffic-port"
-#    path                = "/"
-#    interval            = 10
-#  }
+  #  health_check {
+  #    healthy_threshold   = 4
+  #    unhealthy_threshold = 3
+  #    timeout             = 5
+  #    port                = "traffic-port"
+  #    path                = "/"
+  #    interval            = 10
+  #  }
 
   lifecycle {
     create_before_destroy = true
@@ -67,11 +52,11 @@ resource "aws_lb_target_group" "default" {
 
 resource "aws_lb_listener" "http_listener" {
   load_balancer_arn = "${aws_lb.alb.arn}"
-  port              = "80"
+  port              = "1313"
   protocol          = "HTTP"
 
   default_action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = "${aws_lb_target_group.default.arn}"
   }
 }
